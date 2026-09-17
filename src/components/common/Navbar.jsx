@@ -12,19 +12,19 @@ const Navbar = () => {
   ];
 
   return (
-    <header className="sticky top-0 z-40 border-b border-[#E4E7E2] bg-white/95 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-[var(--color-border)] bg-[var(--color-surface)]/95 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link
           to="/"
           className="flex items-center gap-2.5"
           onClick={() => setOpen(false)}
         >
-          <div className="flex h-9 w-9 items-center justify-center rounded-md bg-[#1F6F5C] text-white">
+          <div className="flex h-9 w-9 items-center justify-center rounded-md bg-[var(--color-primary)] text-white">
             <Briefcase size={18} />
           </div>
           <span
-            className="text-lg font-semibold text-[#171B26]"
-            style={{ fontFamily: "'Fraunces', ui-serif, Georgia, serif" }}
+            className="text-lg font-semibold text-[var(--color-ink)]"
+            style={{ fontFamily: "var(--font-display)" }}
           >
             JobPortal
           </span>
@@ -35,7 +35,7 @@ const Navbar = () => {
             <Link
               key={link.to}
               to={link.to}
-              className="text-sm font-medium text-[#5B6472] transition hover:text-[#171B26]"
+              className="text-sm font-medium text-[var(--color-ink-muted)] transition hover:text-[var(--color-ink)]"
             >
               {link.label}
             </Link>
@@ -45,13 +45,13 @@ const Navbar = () => {
         <div className="hidden items-center gap-5 md:flex">
           <Link
             to="/login"
-            className="text-sm font-medium text-[#5B6472] transition hover:text-[#171B26]"
+            className="text-sm font-medium text-[var(--color-ink-muted)] transition hover:text-[var(--color-ink)]"
           >
             Log in
           </Link>
           <Link
             to="/register"
-            className="rounded-md bg-[#E4572E] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#cc4a25]"
+            className="rounded-md bg-[var(--color-accent)] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[var(--color-accent-hover)]"
           >
             Get started
           </Link>
@@ -60,7 +60,7 @@ const Navbar = () => {
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
-          className="flex h-9 w-9 items-center justify-center rounded-md text-[#171B26] md:hidden"
+          className="flex h-9 w-9 items-center justify-center rounded-md text-[var(--color-ink)] md:hidden"
           aria-label={open ? "Close menu" : "Open menu"}
         >
           {open ? <X size={22} /> : <Menu size={22} />}
@@ -68,30 +68,30 @@ const Navbar = () => {
       </div>
 
       {open && (
-        <div className="border-t border-[#E4E7E2] bg-white px-4 pb-5 pt-2 md:hidden">
+        <div className="border-t border-[var(--color-border)] bg-[var(--color-surface)] px-4 pb-5 pt-2 md:hidden">
           <nav className="flex flex-col gap-1">
             {links.map((link) => (
               <Link
                 key={link.to}
                 to={link.to}
                 onClick={() => setOpen(false)}
-                className="rounded-md px-2 py-2.5 text-sm font-medium text-[#333A46] transition hover:bg-[#F3F5F1]"
+                className="rounded-md px-2 py-2.5 text-sm font-medium text-[var(--color-ink)] transition hover:bg-[var(--color-surface-alt)]"
               >
                 {link.label}
               </Link>
             ))}
-            <div className="mt-2 flex flex-col gap-2 border-t border-[#E4E7E2] pt-3">
+            <div className="mt-2 flex flex-col gap-2 border-t border-[var(--color-border)] pt-3">
               <Link
                 to="/login"
                 onClick={() => setOpen(false)}
-                className="rounded-md px-2 py-2.5 text-center text-sm font-medium text-[#333A46] hover:bg-[#F3F5F1]"
+                className="rounded-md px-2 py-2.5 text-center text-sm font-medium text-[var(--color-ink)] hover:bg-[var(--color-surface-alt)]"
               >
                 Log in
               </Link>
               <Link
                 to="/register"
                 onClick={() => setOpen(false)}
-                className="rounded-md bg-[#E4572E] px-2 py-2.5 text-center text-sm font-semibold text-white hover:bg-[#cc4a25]"
+                className="rounded-md bg-[var(--color-accent)] px-2 py-2.5 text-center text-sm font-semibold text-white hover:bg-[var(--color-accent-hover)]"
               >
                 Get started
               </Link>
