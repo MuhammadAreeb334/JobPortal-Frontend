@@ -1,15 +1,39 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Briefcase, Menu, X } from "lucide-react";
+import { useState } from "react";
+import { useAuth } from "../../context/AuthContext";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+
+  const { user, loading, isAuthenticated, logout } = useAuth();
 
   const links = [
     { to: "/", label: "Home" },
     { to: "/jobs", label: "Find Jobs" },
     { to: "/about", label: "About" },
   ];
+
+  const getDashboardPath = () => {
+    if (user?.role === "candidate") {
+      return "/candidate/dashboard";
+    }
+
+    if (user?.role === "recruiter") {
+      return "/recruiter/dashboard";
+    }
+
+    if (user?.role === "admin") {
+      return "/admin/dashboard";
+    }
+
+    return "/";
+  };
+
+  const handleLogout = async () => {
+    await logout();
+    setOpen(false);
+  };
 
   return (
     <header className="sticky top-0 z-40 border-b border-[var(--color-border)] bg-[var(--color-surface)]/95 backdrop-blur">
@@ -22,6 +46,7 @@ const Navbar = () => {
           <div className="flex h-9 w-9 items-center justify-center rounded-md bg-[var(--color-primary)] text-white">
             <Briefcase size={18} />
           </div>
+
           <span
             className="text-lg font-semibold text-[var(--color-ink)]"
             style={{ fontFamily: "var(--font-display)" }}
@@ -43,23 +68,45 @@ const Navbar = () => {
         </nav>
 
         <div className="hidden items-center gap-5 md:flex">
-          <Link
-            to="/login"
-            className="text-sm font-medium text-[var(--color-ink-muted)] transition hover:text-[var(--color-ink)]"
-          >
-            Log in
-          </Link>
-          <Link
-            to="/register"
-            className="rounded-md bg-[var(--color-accent)] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[var(--color-accent-hover)]"
-          >
-            Get started
-          </Link>
+          {!loading && isAuthenticated ? (
+            <>
+              <Link
+                to={getDashboardPath()}
+                className="text-sm font-medium text-[var(--color-ink-muted)] transition hover:text-[var(--color-ink)]"
+              >
+                Dashboard
+              </Link>
+
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="rounded-md bg-[var(--color-accent)] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[var(--color-accent-hover)]"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="text-sm font-medium text-[var(--color-ink-muted)] transition hover:text-[var(--color-ink)]"
+              >
+                Log in
+              </Link>
+
+              <Link
+                to="/register"
+                className="rounded-md bg-[var(--color-accent)] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[var(--color-accent-hover)]"
+              >
+                Get started
+              </Link>
+            </>
+          )}
         </div>
 
         <button
           type="button"
-          onClick={() => setOpen((v) => !v)}
+          onClick={() => setOpen((value) => !value)}
           className="flex h-9 w-9 items-center justify-center rounded-md text-[var(--color-ink)] md:hidden"
           aria-label={open ? "Close menu" : "Open menu"}
         >
@@ -80,21 +127,45 @@ const Navbar = () => {
                 {link.label}
               </Link>
             ))}
+
             <div className="mt-2 flex flex-col gap-2 border-t border-[var(--color-border)] pt-3">
-              <Link
-                to="/login"
-                onClick={() => setOpen(false)}
-                className="rounded-md px-2 py-2.5 text-center text-sm font-medium text-[var(--color-ink)] hover:bg-[var(--color-surface-alt)]"
-              >
-                Log in
-              </Link>
-              <Link
-                to="/register"
-                onClick={() => setOpen(false)}
-                className="rounded-md bg-[var(--color-accent)] px-2 py-2.5 text-center text-sm font-semibold text-white hover:bg-[var(--color-accent-hover)]"
-              >
-                Get started
-              </Link>
+              {!loading && isAuthenticated ? (
+                <>
+                  <Link
+                    to={getDashboardPath()}
+                    onClick={() => setOpen(false)}
+                    className="rounded-md px-2 py-2.5 text-center text-sm font-medium text-[var(--color-ink)] hover:bg-[var(--color-surface-alt)]"
+                  >
+                    Dashboard
+                  </Link>
+
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    className="rounded-md bg-[var(--color-accent)] px-2 py-2.5 text-center text-sm font-semibold text-white hover:bg-[var(--color-accent-hover)]"
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link
+                    to="/login"
+                    onClick={() => setOpen(false)}
+                    className="rounded-md px-2 py-2.5 text-center text-sm font-medium text-[var(--color-ink)] hover:bg-[var(--color-surface-alt)]"
+                  >
+                    Log in
+                  </Link>
+
+                  <Link
+                    to="/register"
+                    onClick={() => setOpen(false)}
+                    className="rounded-md bg-[var(--color-accent)] px-2 py-2.5 text-center text-sm font-semibold text-white hover:bg-[var(--color-accent-hover)]"
+                  >
+                    Get started
+                  </Link>
+                </>
+              )}
             </div>
           </nav>
         </div>

@@ -3,8 +3,10 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { FireAPI } from "../../services/api";
+import { useAuth } from "../../context/AuthContext";
 
 const Login = () => {
+  const { getCurrentUser } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
@@ -63,6 +65,8 @@ const Login = () => {
       const response = await FireAPI("auth/login", "POST", payload);
 
       console.log("Login Success:", response);
+
+      await getCurrentUser();
 
       toast.success("Logged in successfully");
 
