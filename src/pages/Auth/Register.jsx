@@ -2,7 +2,7 @@ import { Briefcase, Eye, EyeOff, Lock, Mail, UserRound } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { registerUser } from "../../services/authService";
+import { FireAPI } from "../../services/api";
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -47,7 +47,7 @@ const Register = () => {
     if (!formData.password) {
       newErrors.password = "Password is required";
     } else if (formData.password.length < 8) {
-      newErrors.password = "Password must be at least 6 characters";
+      newErrors.password = "Password must be at least 8 characters";
     }
 
     setErrors(newErrors);
@@ -63,7 +63,7 @@ const Register = () => {
     }
     setLoading(true);
 
-    const data = {
+    const payload = {
       name: formData.name,
       email: formData.email,
       password: formData.password,
@@ -71,7 +71,7 @@ const Register = () => {
     };
 
     try {
-      const response = await registerUser(data);
+      const response = await FireAPI("auth/register", "POST", payload);
 
       console.log("Register Success:", response);
 
@@ -82,8 +82,7 @@ const Register = () => {
       console.log("Register Error:", error);
 
       const message =
-        error.response?.data?.message ||
-        "Something went wrong. Please try again.";
+        error?.message || "Something went wrong. Please try again.";
 
       toast.error(message);
     } finally {

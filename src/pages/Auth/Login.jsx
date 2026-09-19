@@ -2,7 +2,7 @@ import { Briefcase, Eye, EyeOff, Lock, Mail } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { loginUser } from "../../services/authService";
+import { FireAPI } from "../../services/api";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -55,12 +55,12 @@ const Login = () => {
     }
     setLoading(true);
 
-    const data = {
+    const payload = {
       email: formData.email,
       password: formData.password,
     };
     try {
-      const response = await loginUser(data);
+      const response = await FireAPI("auth/login", "POST", payload);
 
       console.log("Login Success:", response);
 
@@ -71,8 +71,7 @@ const Login = () => {
       console.log("Login Error:", error);
 
       const message =
-        error.response?.data?.message ||
-        "Something went wrong. Please try again.";
+        error?.message || "Something went wrong. Please try again.";
 
       toast.error(message);
     } finally {
