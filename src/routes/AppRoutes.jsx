@@ -7,6 +7,9 @@ import Me from "../pages/Auth/Me";
 import ProtectedRoute from "./ProtectedRoute";
 import RoleRoute from "./RoleRoute";
 
+import CandidateDashboard from "../pages/Candidate/Dashboard";
+import Profile from "../pages/Candidate/Profile";
+
 const AppRoutes = () => {
   return (
     <Routes>
@@ -17,6 +20,11 @@ const AppRoutes = () => {
 
         <Route element={<ProtectedRoute />}>
           <Route element={<RoleRoute allowedRoles={["candidate"]} />}>
+            <Route
+              path="/candidate/dashboard"
+              element={<CandidateDashboard />}
+            />
+            <Route path="/candidate/profile" element={<Profile />} />
             <Route path="/me" element={<Me />} />
           </Route>
         </Route>
