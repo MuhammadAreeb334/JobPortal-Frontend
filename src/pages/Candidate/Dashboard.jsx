@@ -1,9 +1,29 @@
-import { Bookmark, Briefcase, FileText, Search, UserRound } from "lucide-react";
+import { Briefcase, FileText, Search, UserRound } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { FireAPI } from "../../services/api";
 
 const Dashboard = () => {
   const { user } = useAuth();
+  const [applicationCount, setApplicationCount] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchApplicationCount = async () => {
+      try {
+        const response = await FireAPI("application/my-applications", "GET");
+        const apps = response.applications || [];
+        setApplicationCount(apps.length);
+      } catch (error) {
+        console.log("Failed to fetch application count:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchApplicationCount();
+  }, []);
 
   const dashboardItems = [
     {
@@ -11,12 +31,6 @@ const Dashboard = () => {
       description: "Search and explore jobs that match your skills.",
       icon: Search,
       to: "/jobs",
-    },
-    {
-      title: "Saved Jobs",
-      description: "View the jobs you saved for later.",
-      icon: Bookmark,
-      to: "/candidate/saved-jobs",
     },
     {
       title: "Applied Jobs",
@@ -35,7 +49,6 @@ const Dashboard = () => {
   return (
     <section className="min-h-screen bg-[var(--color-bg)] px-4 py-10 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
-        
         <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-sm font-medium text-[var(--color-accent)]">
@@ -50,8 +63,8 @@ const Dashboard = () => {
             </h1>
 
             <p className="mt-2 max-w-xl text-sm leading-6 text-[var(--color-ink-muted)]">
-              Keep track of your job search, applications, saved jobs, and
-              profile from one place.
+              Keep track of your job search, applications, and profile from one
+              place.
             </p>
           </div>
 
@@ -64,7 +77,7 @@ const Dashboard = () => {
           </Link>
         </div>
 
-        <div className="mt-10 grid gap-4 sm:grid-cols-3">
+        <div className="mt-10 grid gap-4 sm:grid-cols-2">
           <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5">
             <div className="flex items-center justify-between">
               <p className="text-sm text-[var(--color-ink-muted)]">
@@ -78,32 +91,11 @@ const Dashboard = () => {
               className="mt-4 text-3xl font-medium text-[var(--color-ink)]"
               style={{ fontFamily: "var(--font-display)" }}
             >
-              0
+              {loading ? "..." : applicationCount}
             </p>
 
             <p className="mt-1 text-xs text-[var(--color-ink-muted)]">
               Jobs you have applied to
-            </p>
-          </div>
-
-          <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5">
-            <div className="flex items-center justify-between">
-              <p className="text-sm text-[var(--color-ink-muted)]">
-                Saved Jobs
-              </p>
-
-              <Bookmark size={20} className="text-[var(--color-primary)]" />
-            </div>
-
-            <p
-              className="mt-4 text-3xl font-medium text-[var(--color-ink)]"
-              style={{ fontFamily: "var(--font-display)" }}
-            >
-              0
-            </p>
-
-            <p className="mt-1 text-xs text-[var(--color-ink-muted)]">
-              Jobs saved for later
             </p>
           </div>
 
@@ -143,7 +135,7 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
             {dashboardItems.map((item) => {
               const Icon = item.icon;
 
@@ -183,6 +175,7 @@ const Dashboard = () => {
             <div className="max-w-xl">
               <div className="flex items-center gap-2 text-[var(--color-dark-muted)]">
                 <Briefcase size={17} />
+
                 <span className="text-xs font-semibold uppercase tracking-[0.16em]">
                   Resume
                 </span>
@@ -202,10 +195,10 @@ const Dashboard = () => {
             </div>
 
             <Link
-              to="/candidate/profile"
+              to="/candidate/resume"
               className="inline-flex shrink-0 items-center justify-center rounded-md bg-white px-5 py-3 text-sm font-semibold text-[var(--color-dark)] transition hover:bg-[var(--color-surface-alt)]"
             >
-              Update profile
+              Update resume
             </Link>
           </div>
         </div>
